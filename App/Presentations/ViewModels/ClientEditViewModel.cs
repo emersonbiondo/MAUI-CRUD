@@ -27,26 +27,11 @@ namespace App.Presentations.ViewModels
         {
             get
             {
-                if (Client.Age > 0)
-                {
-                    return Client.Age.ToString();
-                }
-                else
-                {
-                    return string.Empty;
-                }
+                return Client.age.ReturnIntToStringWithEmpty();
             }
             set
             {
-                string result = Regex.Replace(value, @"[^0-9]+", string.Empty);
-                if (Regex.Match(result, @"^[0-9]+$").Success)
-                {
-                    Client.Age = int.Parse(result);
-                }
-                else
-                {
-                    Client.Age = 0;
-                }
+                Client.Age = value.ReturnValidNumber();
                 OnPropertyChanged("AgeString");
             }
         }
