@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:App.Presentations.ViewModels"
+             xmlns:m="clr-namespace:App.Presentations.Models"
+             x:DataType="vm:ClientListViewModel"
+             x:Class="App.Presentations.Views.ClientListView"
+             Title="App">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <HorizontalStackLayout Grid.Row="0" Margin="20">
+            <Button Text="Add Client" BackgroundColor="Green" Margin="0,0,10,0" WidthRequest="100" Command="{Binding AddClientCommand}"/>
+        </HorizontalStackLayout>
+        <HorizontalStackLayout Grid.Row="1" Margin="20">
+            <Label Grid.Row="1" Text="List Clients" FontSize="Title"/>
+        </HorizontalStackLayout>
+        <ScrollView Grid.Row="2">
+            <CollectionView x:Name="ClientsCollection" ItemsSource="{Binding Clients}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="m:Client">
+                        <Frame>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="110"/>
+                                    <ColumnDefinition Width="110"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Button Grid.Column="0" Text="Edit" BackgroundColor="Green" Margin="0,0,10,0" CommandParameter="{Binding Id}" Command="{Binding Source={x:Reference ClientsCollection}, Path=BindingContext.EditClientCommand}"/>
+                                <Button Grid.Column="1" Text="Remove" BackgroundColor="Red" Margin="0,0,10,0" CommandParameter="{Binding Id}" Command="{Binding Source={x:Reference ClientsCollection}, Path=BindingContext.DeleteClientCommand}"/>
+                                <StackLayout Grid.Column="2" Orientation="Vertical">
+                                    <Label Text="{Binding Name}"></Label>
+                                    <Label Text="{Binding LastName}"></Label>
+                                    <Label Text="{Binding Age}"></Label>
+                                    <Label Text="{Binding Address}"></Label>
+                                </StackLayout>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
+    </Grid>
+</ContentPage>
