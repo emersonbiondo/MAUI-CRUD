@@ -1,5 +1,6 @@
 ﻿using App.Presentations.ViewModels;
 using App.Presentations.Views;
+using App.Repositories;
 using App.Utils;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
@@ -49,6 +50,7 @@ namespace App
                 });
             });
 #endif
+            builder.Services.AddSingleton<IClientRepository, ClientRepository>();
             builder.Services.AddSingleton<IAlertService, AlertService>();
 
             builder.Services.AddTransient<ClientListViewModel>();

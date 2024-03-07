@@ -1,6 +1,6 @@
 ﻿using App.Presentations.Models;
 using App.Presentations.Views;
-using App.Services;
+using App.Repositories;
 using App.Utils;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -10,13 +10,17 @@ namespace App.Presentations.ViewModels
 {
     public partial class ClientListViewModel : ObservableObject
     {
-        public static IAlertService AlertService;
+        private static IAlertService AlertService;
+
+        private IClientRepository ClientRepository;
 
         public ObservableCollection<Client> Clients { get; set; }
 
-        public ClientListViewModel(IAlertService alertService)
+        public ClientListViewModel(IAlertService alertService, IClientRepository clientRepository)
         {
             AlertService = alertService;
+
+            ClientRepository = clientRepository;
 
             Clients = new ObservableCollection<Client>();
         }
@@ -37,7 +41,7 @@ namespace App.Presentations.ViewModels
         {
             Clients.Clear();
 
-            foreach (var client in ClientService.Instance().Clients)
+            foreach (var client in await ClientRepository.GetAll())
             {
                 Clients.Add(client);
             }
@@ -50,9 +54,7 @@ namespace App.Presentations.ViewModels
             {
                 if (result)
                 {
-                    var index = ClientService.Instance().Clients.BinarySearch(new Client() { Id = id });
-
-                    ClientService.Instance().Clients.RemoveAt(index);
+                    await ClientRepository.Delete(id);
 
                     await ClientsLoad();
 

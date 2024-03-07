@@ -1,16 +1,16 @@
 ﻿using App.Presentations.Models;
-using App.Services;
+using App.Repositories;
 using App.Utils;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.ComponentModel;
-using System.Text.RegularExpressions;
 
 namespace App.Presentations.ViewModels
 {
     public partial class ClientEditViewModel : ObservableObject
     {
-        public static IAlertService AlertService;
+        private static IAlertService AlertService;
+
+        private IClientRepository ClientRepository;
 
         private Client client;
 
@@ -44,9 +44,11 @@ namespace App.Presentations.ViewModels
 
         public bool IsAddressValid { get; set; }
 
-        public ClientEditViewModel(IAlertService alertService)
+        public ClientEditViewModel(IAlertService alertService, IClientRepository clientRepository)
         {
             AlertService = alertService;
+
+            ClientRepository = clientRepository;
 
             Client = new Client();
         }
@@ -56,9 +58,7 @@ namespace App.Presentations.ViewModels
         {
             if (ClientValidate())
             {
-                var index = ClientService.Instance().Clients.BinarySearch(client);
-
-                ClientService.Instance().Clients[index] = Client;
+                await ClientRepository.Update(Client);
 
                 AlertService.ShowAlert("Success", "The Client is Update");
                 await Shell.Current.GoToAsync("..");
@@ -73,8 +73,7 @@ namespace App.Presentations.ViewModels
 
         public async void ClientLoad(int Id)
         {
-            var index = ClientService.Instance().Clients.BinarySearch(new Client() { Id = Id });
-            Client = ClientService.Instance().Clients[index];
+            Client = await ClientRepository.Get(Id);
             OnPropertyChanged("AgeString");
         }
 

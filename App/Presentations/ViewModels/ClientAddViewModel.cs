@@ -1,5 +1,5 @@
 ﻿using App.Presentations.Models;
-using App.Services;
+using App.Repositories;
 using App.Utils;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -9,7 +9,9 @@ namespace App.Presentations.ViewModels
 {
     public partial class ClientAddViewModel : ObservableObject
     {
-        public static IAlertService AlertService;
+        private static IAlertService AlertService;
+
+        private IClientRepository ClientRepository;
 
         private Client client;
 
@@ -57,9 +59,11 @@ namespace App.Presentations.ViewModels
 
         public bool IsAddressValid { get; set; }
 
-        public ClientAddViewModel(IAlertService alertService) 
+        public ClientAddViewModel(IAlertService alertService, IClientRepository clientRepository) 
         {
             AlertService = alertService;
+
+            ClientRepository = clientRepository;
 
             Client = new Client();
         }
@@ -69,17 +73,10 @@ namespace App.Presentations.ViewModels
         {
             if (ClientValidate())
             {
-                if (ClientService.Instance().Clients.Count > 0)
-                {
-                    client.Id = ClientService.Instance().Clients.Last().Id + 1;
-                }
-                else
-                {
-                    client.Id = 1;
-                }
-                ClientService.Instance().Clients.Add(client);
+                await ClientRepository.Add(client);
 
                 AlertService.ShowAlert("Success", "The Client is Save");
+
                 await Shell.Current.GoToAsync("..");
             }
         }

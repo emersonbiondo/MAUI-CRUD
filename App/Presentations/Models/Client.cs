@@ -1,14 +1,19 @@
 ﻿using App.Utils;
 using CommunityToolkit.Mvvm.ComponentModel;
+using SQLite;
+using System.ComponentModel.DataAnnotations;
 
 namespace App.Presentations.Models
 {
-    public class Client: ObservableObject, IComparable<Client>
+    public class Client : ObservableObject
     {
+        [Required]
+        [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
         public string name;
 
+        [Required]
         public string Name
         {
             get => name;
@@ -20,6 +25,7 @@ namespace App.Presentations.Models
 
         public string lastName;
 
+        [Required]
         public string LastName
         {
             get => lastName;
@@ -31,6 +37,7 @@ namespace App.Presentations.Models
 
         public int age;
 
+        [Required]
         public int Age
         {
             get => age;
@@ -42,6 +49,7 @@ namespace App.Presentations.Models
 
         public string address;
 
+        [Required]
         public string Address
         {
             get => address;
@@ -58,13 +66,6 @@ namespace App.Presentations.Models
             LastName = string.Empty;
             Age = DefaultValues.CLIENT_AGE;
             Address = string.Empty;
-        }
-
-        public int CompareTo(Client? other)
-        {
-            if (other == null) return 1;
-
-            return Id.CompareTo(other.Id);  
         }
     }
 }
