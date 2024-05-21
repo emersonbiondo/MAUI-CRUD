@@ -1,4 +1,4 @@
-# MAUI CRUD Sample
+# MAUI CRUD Example
 
 ### Screen Home, list clients.
 
