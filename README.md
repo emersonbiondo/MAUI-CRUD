@@ -1,6 +1,4 @@
-# Segundo Teste MAUI
-Teste com título: Seja bem vindo ao teste técnico do BTG Pactual
-
+# MAUI CRUD Sample
 
 ### Screen Home, list clients.
 
